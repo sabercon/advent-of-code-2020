@@ -17,6 +17,11 @@ fun readLines(name: String) = File("src", "$name.txt")
     .readLines()
 
 /**
+ * Matches the given line with the regex and returns the destructured groups.
+ */
+fun Regex.destructureGroups(line: String) = matchEntire(line)!!.destructured
+
+/**
  * Converts string to md5 hash.
  */
 fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
