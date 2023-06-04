@@ -5,7 +5,7 @@ fun main() {
         }
     }
 
-    val input = readInput("Day03")
+    val input = readLines("Day03")
 
     trees(input, 3, 1).println()
 
