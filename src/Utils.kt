@@ -2,6 +2,8 @@ import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
 
+val LINE_SEPARATOR = System.lineSeparator()!!
+
 /**
  * Reads text from the given input txt file.
  */
