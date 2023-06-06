@@ -1,24 +1,24 @@
 fun main() {
-    abstract class Point {
+    abstract class Point(val dimension: Int) {
         abstract fun neighbors(): List<Point>
-    }
 
-    data class Point3D(val x: Int = 0, val y: Int = 0, val z: Int = 0) : Point() {
-        override fun neighbors(): List<Point> {
-            return (-1..1).flatMap { dx -> (-1..1).map { dy -> dx to dy } }
-                .flatMap { (dx, dy) -> (-1..1).map { dz -> Triple(dx, dy, dz) } }
-                .filter { (dx, dy, dz) -> dx != 0 || dy != 0 || dz != 0 }
-                .map { (dx, dy, dz) -> Point3D(x + dx, y + dy, z + dz) }
+        protected fun deltas(): List<List<Int>> {
+            val seq = generateSequence(listOf(emptyList<Int>())) { deltas ->
+                deltas.flatMap { delta -> (-1..1).map { delta + it } }
+            }
+            return seq.elementAt(dimension).filterNot { it.all { d -> d == 0 } }
         }
     }
 
-    data class Point4D(val x: Int = 0, val y: Int = 0, val z: Int = 0, val w: Int = 0) : Point() {
+    data class Point3D(val x: Int = 0, val y: Int = 0, val z: Int = 0) : Point(3) {
         override fun neighbors(): List<Point> {
-            return (-1..1).flatMap { dx -> (-1..1).map { dy -> dx to dy } }
-                .flatMap { (dx, dy) -> (-1..1).map { dz -> Triple(dx, dy, dz) } }
-                .flatMap { (dx, dy, dz) -> (-1..1).map { dw -> listOf(dx, dy, dz, dw) } }
-                .filter { (dx, dy, dz, dw) -> dx != 0 || dy != 0 || dz != 0 || dw != 0 }
-                .map { (dx, dy, dz, dw) -> Point4D(x + dx, y + dy, z + dz, w + dw) }
+            return deltas().map { (dx, dy, dz) -> Point3D(x + dx, y + dy, z + dz) }
+        }
+    }
+
+    data class Point4D(val x: Int = 0, val y: Int = 0, val z: Int = 0, val w: Int = 0) : Point(4) {
+        override fun neighbors(): List<Point> {
+            return deltas().map { (dx, dy, dz, dw) -> Point4D(x + dx, y + dy, z + dz, w + dw) }
         }
     }
 
